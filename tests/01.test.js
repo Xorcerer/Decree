@@ -144,6 +144,63 @@ describe('judge with an error handling callback', function() {
 
 });
 
+describe('judge 100 times with an error handling callback', function() {
+
+    var decs = [{
+        type: 'string'
+    }, {
+        type: 'number'
+    }, {
+        type: 'hash'
+    }];
+    var repeatTimes = 10000;
+    var judge = decree(decs);
+
+    describe('with legal arguments', function() {
+
+        var args = ['hello', 1, {
+            a: 'b'
+        }];
+        it('should be ok', function() {
+            var cbCalled = false,
+                errCbCalled = false;
+            for (var i = 0; i < repeatTimes; i++) {
+                judge(args, function(a1, a2, a3) {
+                    cbCalled = true;
+                }, function(err) {
+                    errCbCalled = true;
+                });
+            }
+
+            cbCalled.should.be.true;
+            errCbCalled.should.be.false;
+        });
+
+    });
+
+    describe('with illegal arguments', function() {
+
+        var args = [1, 1, {
+            a: 'b'
+        }];
+        it('should call handler with an error', function() {
+            var cbCalled = false,
+                errCbCalled = false;
+            for (var i = 0; i < repeatTimes; i++) {
+                judge(args, function(a1, a2, a3) {
+                    cbCalled = true;
+                }, function(err) {
+                    errCbCalled = true;
+                });
+            }
+            cbCalled.should.be.false;
+            errCbCalled.should.be.true;
+        });
+
+    });
+
+});
+
 describe('arguments with default assignments modified by user', function() {
 
     var decs = [{
