@@ -5,6 +5,17 @@
  */
 function decreeFactory(clone, validators) {
 
+    function groupBy(list, keyFunction) {
+        result = {};
+
+        list.forEach(function(item) {
+            key = keyFunction(item);
+            (result[key] || (result[key] = [])).push(item);
+        });
+
+        return result;
+    }
+
     function getPcs(list) {
         // possible configurations
         var pcs = [];
@@ -29,14 +40,12 @@ function decreeFactory(clone, validators) {
                 pcs = _pcs;
             }
         });
-        return pcs;
+        return groupBy(pcs, function(pc) { return pc.length; });
     }
 
     function match(pcs, args) {
         var res = [];
-        pcs.filter(function(pc) {
-            return pc.length === args.length;
-        }).forEach(function(pc) {
+        (pcs[args.length] || []).forEach(function(pc) {
             for (var i = 0; i < pc.length; i++)
                 if (!pc[i].validator(args[i]))
                     return;
