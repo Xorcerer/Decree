@@ -144,7 +144,7 @@ describe('judge with an error handling callback', function() {
 
 });
 
-describe('judge 100 times with an error handling callback', function() {
+describe('judge 10000 times with an error handling callback', function() {
 
     var decs = [{
         type: 'string'
